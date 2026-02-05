@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const sam = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
 });
 
 // This helper will be useful once you have your token

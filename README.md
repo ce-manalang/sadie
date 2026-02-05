@@ -1,16 +1,43 @@
-# React + Vite
+# Sadie Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React + Vite application that serves as the user interface for the Library Book Catalog. It connects to the **Sam Library API** to provide a seamless book browsing and management experience.
 
-Currently, two official plugins are available:
+## 🛠 Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Node.js**: v18+ (v20+ recommended)
+- **npm** or **yarn**
+- **Sam API**: Running locally (default `http://localhost:3000`)
 
-## React Compiler
+## 🚀 Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+### 2. Environment Configuration
+The app uses environment variables for configuration. Copy the example file:
+```bash
+cp .env.example .env
+```
+Ensure `VITE_API_URL` points to your running Sam API instance.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 3. Run Development Server
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:5173`.
+
+## 📚 Features
+
+- **Public Catalog**: Browse available books without an account.
+- **Secure Login**: Access your personal dashboard (connected to Sam API).
+- **Responsive Design**: Optimized for both desktop and mobile viewing.
+
+## 🛠 Tech Stack
+
+- **React 19**: UI Library
+- **Vite**: Build Tool & Dev Server
+- **Axios**: API Client
+- **Tailwind CSS**: Styling
+- **React Router**: Frontend Routing
