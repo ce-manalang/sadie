@@ -10,7 +10,7 @@ function Login({ setToken }) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post('http://localhost:3000/users/sign_in', {
+			const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/users/sign_in`, {
 				user: { email, password }
 			}, {
 				headers: { Accept: 'application/json' }
