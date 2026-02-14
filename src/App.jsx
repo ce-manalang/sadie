@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import PublicCatalog from './components/PublicCatalog';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
+import BookDetail from './components/BookDetail';
 
 function AppContent({ token, setToken }) {
 	const navigate = useNavigate();
@@ -123,6 +124,7 @@ function AppContent({ token, setToken }) {
 				<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 					<Routes>
 						<Route path="/" element={<PublicCatalog />} />
+						<Route path="/books/:id" element={<BookDetail />} />
 						<Route path="/dashboard" element={<Dashboard />} />
 						<Route path="/login" element={<Login setToken={setToken} />} />
 					</Routes>
