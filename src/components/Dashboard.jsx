@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function Dashboard() {
@@ -44,7 +45,7 @@ function Dashboard() {
 
 				<div className="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 					{myBooks.map((book) => (
-						<div key={book.id} className="group relative">
+						<Link key={book.id} to={`/books/${book.dato_book_id}`} className="group relative">
 							<div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
 								<img
 									src={book.cover?.url || 'https://via.placeholder.com/300x450?text=No+Cover'}
@@ -77,7 +78,7 @@ function Dashboard() {
 							{book.description && (
 								<p className="mt-2 text-xs text-gray-500 line-clamp-2">{book.description}</p>
 							)}
-						</div>
+						</Link>
 					))}
 				</div>
 
