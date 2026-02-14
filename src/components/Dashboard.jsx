@@ -27,6 +27,30 @@ function Dashboard() {
 		fetchLibraryBooks();
 	}, []);
 
+	const handleRemoveBook = async (bookId, bookTitle) => {
+		const confirmed = window.confirm(`Are you sure you want to remove "${bookTitle}" from your library?`);
+
+		if (!confirmed) {
+			return;
+		}
+
+		const token = localStorage.getItem('token');
+
+		try {
+			await axios.delete(`http://localhost:3000/library_books/${bookId}`, {
+				headers: {
+					Authorization: token
+				}
+			});
+
+			// Remove book from UI immediately
+			setMyBooks(prevBooks => prevBooks.filter(book => book.id !== bookId));
+		} catch (err) {
+			console.error("Error removing book", err);
+			alert("Failed to remove book. Please try again.");
+		}
+	};
+
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center h-64">
@@ -45,40 +69,50 @@ function Dashboard() {
 
 				<div className="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 					{myBooks.map((book) => (
-						<Link key={book.id} to={`/books/${book.dato_book_id}`} className="group relative">
-							<div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-								<img
-									src={book.cover?.url || 'https://via.placeholder.com/300x450?text=No+Cover'}
-									alt={book.title}
-									className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-								/>
-							</div>
-							<div className="mt-4 flex justify-between">
-								<div>
-									<h3 className="text-sm font-medium text-gray-900">
-										<span aria-hidden="true" className="absolute inset-0" />
-										{book.title}
-									</h3>
-									<p className="mt-1 text-sm text-gray-500">{book.author}</p>
-									{book.isbn && <p className="mt-1 text-xs text-gray-400">ISBN: {book.isbn}</p>}
+						<div key={book.id} className="group relative">
+							<Link to={`/books/${book.dato_book_id}`}>
+								<div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+									<img
+										src={book.cover?.url || 'https://via.placeholder.com/300x450?text=No+Cover'}
+										alt={book.title}
+										className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+									/>
 								</div>
-								<div className="text-right">
-									<p className="text-sm font-medium text-indigo-600">{book.status}</p>
-									{book.tags && (
-										<div className="mt-2 flex flex-wrap gap-1 justify-end">
-											{book.tags.split(',').map(tag => (
-												<span key={tag} className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
-													{tag.trim()}
-												</span>
-											))}
-										</div>
-									)}
+								<div className="mt-4 flex justify-between">
+									<div>
+										<h3 className="text-sm font-medium text-gray-900">
+											{book.title}
+										</h3>
+										<p className="mt-1 text-sm text-gray-500">{book.author}</p>
+										{book.isbn && <p className="mt-1 text-xs text-gray-400">ISBN: {book.isbn}</p>}
+									</div>
+									<div className="text-right">
+										<p className="text-sm font-medium text-indigo-600">{book.status}</p>
+										{book.tags && (
+											<div className="mt-2 flex flex-wrap gap-1 justify-end">
+												{book.tags.split(',').map(tag => (
+													<span key={tag} className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+														{tag.trim()}
+													</span>
+												))}
+											</div>
+										)}
+									</div>
 								</div>
-							</div>
-							{book.description && (
-								<p className="mt-2 text-xs text-gray-500 line-clamp-2">{book.description}</p>
-							)}
-						</Link>
+								{book.description && (
+									<p className="mt-2 text-xs text-gray-500 line-clamp-2">{book.description}</p>
+								)}
+							</Link>
+							<button
+								onClick={(e) => {
+									e.preventDefault();
+									handleRemoveBook(book.id, book.title);
+								}}
+								className="mt-3 w-full rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+							>
+								Remove from Library
+							</button>
+						</div>
 					))}
 				</div>
 
