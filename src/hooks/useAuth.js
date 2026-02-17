@@ -16,7 +16,7 @@ export function useAuth() {
       localStorage.setItem('token', authToken);
       setToken(authToken);
 
-      return { success: true };
+      return { success: true, token: authToken };
     } catch (err) {
       console.error("Login failed", err);
       return {
