@@ -1,29 +1,52 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { ErrorBoundary } from 'react-error-boundary';
+import { LayoutGroup, motion, AnimatePresence } from 'framer-motion';
 import PublicCatalog from './components/PublicCatalog';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import BookDetail from './components/BookDetail';
+import { ErrorFallback } from './components/ErrorFallback';
+import { useAuth } from './hooks/useAuth';
 
 function AppContent({ token, setToken }) {
 	const navigate = useNavigate();
+	const { logout } = useAuth();
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-	const logout = () => {
-		localStorage.removeItem('token');
+	const handleLogout = () => {
+		logout();
 		setToken(null);
 		navigate('/login');
 	};
 
 	return (
-		<div className="bg-white">
+		<div className="bg-background min-h-screen">
 			{/* Mobile menu */}
-			<el-dialog>
-				<dialog id="mobile-menu" className="m-0 p-0 backdrop:bg-transparent lg:hidden">
-					<el-dialog-backdrop className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"></el-dialog-backdrop>
-					<div tabIndex="0" className="fixed inset-0 flex focus:outline focus:outline-0">
-						<el-dialog-panel className="relative flex w-full max-w-xs transform flex-col overflow-y-auto bg-white pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:-translate-x-full">
+			<AnimatePresence>
+				{mobileMenuOpen && (
+					<div className="fixed inset-0 z-50 lg:hidden">
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 0.25 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.3, ease: 'easeOut' }}
+							className="fixed inset-0 bg-black"
+							onClick={() => setMobileMenuOpen(false)}
+						/>
+						<motion.div
+							initial={{ x: '-100%' }}
+							animate={{ x: 0 }}
+							exit={{ x: '-100%' }}
+							transition={{ duration: 0.3, ease: 'easeOut' }}
+							className="relative flex w-full max-w-xs transform flex-col overflow-y-auto bg-surface pb-12 shadow-xl"
+						>
 							<div className="flex px-4 pb-2 pt-5">
-								<button type="button" command="close" commandfor="mobile-menu" className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400">
+								<button
+									type="button"
+									onClick={() => setMobileMenuOpen(false)}
+									className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
+								>
 									<span className="absolute -inset-0.5"></span>
 									<span className="sr-only">Close menu</span>
 									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" data-slot="icon" aria-hidden="true" className="size-6">
@@ -35,10 +58,10 @@ function AppContent({ token, setToken }) {
 							{/* Links */}
 							<div className="space-y-6 border-t border-gray-200 px-4 py-6">
 								<div className="flow-root">
-									<Link to="/" className="-m-2 block p-2 font-medium text-gray-900" onClick={() => document.getElementById('mobile-menu').close()}>Public Library</Link>
+									<Link to="/" className="-m-2 block p-2 font-display text-gray-800" onClick={() => setMobileMenuOpen(false)}>Public Library</Link>
 								</div>
 								<div className="flow-root">
-									<Link to="/dashboard" className="-m-2 block p-2 font-medium text-gray-900" onClick={() => document.getElementById('mobile-menu').close()}>My Dashboard</Link>
+									<Link to="/dashboard" className="-m-2 block p-2 font-display text-gray-800" onClick={() => setMobileMenuOpen(false)}>My Dashboard</Link>
 								</div>
 							</div>
 
@@ -46,29 +69,33 @@ function AppContent({ token, setToken }) {
 								{!token ? (
 									<>
 										<div className="flow-root">
-											<Link to="/login" className="-m-2 block p-2 font-medium text-gray-900" onClick={() => document.getElementById('mobile-menu').close()}>Sign in</Link>
+											<Link to="/login" className="-m-2 block p-2 font-display text-gray-800" onClick={() => setMobileMenuOpen(false)}>Sign in</Link>
 										</div>
 										<div className="flow-root">
-											<a href="#" className="-m-2 block p-2 font-medium text-gray-900">Create account</a>
+											<a href="#" className="-m-2 block p-2 font-display text-gray-800">Create account</a>
 										</div>
 									</>
 								) : (
 									<div className="flow-root">
-										<button onClick={() => { logout(); document.getElementById('mobile-menu').close(); }} className="-m-2 block p-2 font-medium text-gray-900">Logout</button>
+										<button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="-m-2 block p-2 font-display text-gray-800">Logout</button>
 									</div>
 								)}
 							</div>
-						</el-dialog-panel>
+						</motion.div>
 					</div>
-				</dialog>
-			</el-dialog>
+				)}
+			</AnimatePresence>
 
 			<header className="relative overflow-hidden">
 				{/* Top navigation */}
-				<nav aria-label="Top" className="relative z-20 bg-white/90 backdrop-blur-xl backdrop-filter">
+				<nav aria-label="Top" className="relative z-20 bg-surface/90 backdrop-blur-xl">
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						<div className="flex h-16 items-center">
-							<button type="button" command="show-modal" commandfor="mobile-menu" className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden">
+							<button
+								type="button"
+								onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+								className="relative rounded-md bg-surface p-2 text-gray-400 lg:hidden"
+							>
 								<span className="absolute -inset-0.5"></span>
 								<span className="sr-only">Open menu</span>
 								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" data-slot="icon" aria-hidden="true" className="size-6">
@@ -79,16 +106,16 @@ function AppContent({ token, setToken }) {
 							{/* Logo */}
 							<div className="ml-4 flex lg:ml-0">
 								<Link to="/">
-									<span className="sr-only">Your Company</span>
-									<img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="" className="h-8 w-auto" />
+									<span className="sr-only">Sadie</span>
+									<span className="font-display text-xl text-gray-800">Sadie</span>
 								</Link>
 							</div>
 
-							{/* Flyout menus */}
+							{/* Desktop nav links */}
 							<div className="hidden lg:ml-8 lg:block lg:self-stretch">
 								<div className="flex h-full space-x-8">
-									<Link to="/" className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">Public Library</Link>
-									<Link to="/dashboard" className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800">My Dashboard</Link>
+									<Link to="/" className="flex items-center text-sm font-display text-gray-600 hover:text-teal-600 transition-colors duration-200">Public Library</Link>
+									<Link to="/dashboard" className="flex items-center text-sm font-display text-gray-600 hover:text-teal-600 transition-colors duration-200">My Dashboard</Link>
 								</div>
 							</div>
 
@@ -96,23 +123,13 @@ function AppContent({ token, setToken }) {
 								<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
 									{!token ? (
 										<>
-											<Link to="/login" className="text-sm font-medium text-gray-700 hover:text-gray-800">Sign in</Link>
+											<Link to="/login" className="text-sm font-display text-gray-600 hover:text-teal-600 transition-colors duration-200">Sign in</Link>
 											<span aria-hidden="true" className="h-6 w-px bg-gray-200"></span>
-											<a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Create account</a>
+											<a href="#" className="text-sm font-display text-gray-600 hover:text-teal-600 transition-colors duration-200">Create account</a>
 										</>
 									) : (
-										<button onClick={logout} className="text-sm font-medium text-gray-700 hover:text-gray-800">Logout</button>
+										<button onClick={handleLogout} className="text-sm font-display text-gray-600 hover:text-teal-600 transition-colors duration-200">Logout</button>
 									)}
-								</div>
-
-								{/* Search */}
-								<div className="flex lg:ml-6">
-									<a href="#" className="p-2 text-gray-400 hover:text-gray-500">
-										<span className="sr-only">Search</span>
-										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" data-slot="icon" aria-hidden="true" className="size-6">
-											<path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" strokeLinecap="round" strokeLinejoin="round" />
-										</svg>
-									</a>
 								</div>
 							</div>
 						</div>
@@ -122,20 +139,24 @@ function AppContent({ token, setToken }) {
 
 			<main>
 				<div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-					<Routes>
-						<Route path="/" element={<PublicCatalog />} />
-						<Route path="/books/:id" element={<BookDetail />} />
-						<Route path="/dashboard" element={<Dashboard />} />
-						<Route path="/login" element={<Login setToken={setToken} />} />
-					</Routes>
+					<ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => window.location.reload()}>
+						<LayoutGroup>
+							<Routes>
+								<Route path="/" element={<PublicCatalog />} />
+								<Route path="/books/:id" element={<BookDetail />} />
+								<Route path="/dashboard" element={<Dashboard />} />
+								<Route path="/login" element={<Login setToken={setToken} />} />
+							</Routes>
+						</LayoutGroup>
+					</ErrorBoundary>
 				</div>
 			</main>
 
-			<footer aria-labelledby="footer-heading" className="bg-white">
+			<footer aria-labelledby="footer-heading" className="bg-background">
 				<h2 id="footer-heading" className="sr-only">Footer</h2>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="border-t border-gray-200 py-10">
-						<p className="text-sm text-gray-500">Copyright &copy; 2026 Your Library, Inc.</p>
+						<p className="text-sm text-gray-500">Copyright &copy; 2026 Sadie</p>
 					</div>
 				</div>
 			</footer>
