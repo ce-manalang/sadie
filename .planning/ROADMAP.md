@@ -16,6 +16,13 @@ Transform Sadie from a functional book library into a calm, minimal reading comp
 
 **Dependencies:** None (starting point)
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md -- Design tokens, typography, font loading, dependency installation
+- [ ] 01-02-PLAN.md -- Custom hooks for API logic and ErrorFallback component
+- [ ] 01-03-PLAN.md -- Wire hooks into components, restyle with design tokens, add animations, replace custom elements
+
 **Requirements:**
 - FOUND-01: Design tokens in Tailwind config
 - FOUND-02: Error boundaries with calm fallback UI
@@ -101,7 +108,7 @@ Transform Sadie from a functional book library into a calm, minimal reading comp
 
 | Phase | Requirements | Status | Completion |
 |-------|--------------|--------|------------|
-| 1 - Foundation & Design System | 8 | Pending | 0% |
+| 1 - Foundation & Design System | 8 | Planned | 0% |
 | 2 - Library Features | 8 | Pending | 0% |
 | 3 - Loading & Error States | 2 | Pending | 0% |
 | 4 - Codebase Refinement | 0 | Pending | 0% |
@@ -133,7 +140,7 @@ Transform Sadie from a functional book library into a calm, minimal reading comp
 - Phase 4 has no new requirements (refactoring existing functionality)
 
 **Research alignment:**
-- Research suggested Phase 0 (Foundation) → Phase 1 (Design System) → Phase 2 (Features) → Phase 3-5 (Visual Refactor)
+- Research suggested Phase 0 (Foundation) -> Phase 1 (Design System) -> Phase 2 (Features) -> Phase 3-5 (Visual Refactor)
 - Quick depth compressed this into 4 phases
 - Foundation + Design System merged into Phase 1 (dependency order preserved)
 - New Features remain separate as Phase 2 (additive, low risk)
@@ -142,4 +149,4 @@ Transform Sadie from a functional book library into a calm, minimal reading comp
 
 ---
 
-*Last updated: 2026-02-16 after roadmap creation*
+*Last updated: 2026-02-17 after Phase 1 planning*
